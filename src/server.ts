@@ -1,41 +1,26 @@
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
+import { rootServiceRoutes } from './routes/routes';
+
+const SERVER_PORT = 3000;
 
 export class AppServer {
   private httpServer: http.Server | null = null;
   private app = express();
 
+  constructor(private configs: {} = {}) {
+    // TODO
+  }
+
   async startServer() {
     console.log('Starting up.....');
 
     this.useMiddlewares();
+    this.useServiceRoutes();
 
-    this.httpServer = this.app.listen({ port: 3000 }, () => {
-      console.log(`🚀 Server ready at ${3000}`);
-    });
-
-    this.app.get('/', (req, res) => {
-      // const { name = 'user' } = req.query;
-      res.send(`Hello!`);
-    });
-
-    this.app.get('/api/v1/test', (req, res) => {
-      // const { name = 'user' } = req.query;
-      res.send(`Hello API test`);
-    });
-
-    this.app.get('/api/portfolio-gateway', (req, res) => {
-      res.send(`Hello portfolio-gateway!`);
-    });
-
-    this.app.get('/api/portfolio-gateway/portfolio-auth', async (req, res) => {
-      const result = await fetch(
-        'http://portfolio-auth-service:3000/api/portfolio-auth/v1/health'
-      );
-
-      const parsed = await result.json();
-      res.send(`Hello! ${JSON.stringify(parsed)}`);
+    this.httpServer = this.app.listen({ port: SERVER_PORT }, () => {
+      console.log(`🚀 Server ready at ${SERVER_PORT}`);
     });
   }
 
@@ -51,14 +36,12 @@ export class AppServer {
     //   "preflightContinue": false,
     //   "optionsSuccessStatus": 204
     // }
-    this.app.use(
-      cors({
-        // origin: ['https://studio.apollographql.com', ' http://localhost:8082'],
-        // credentials: true,
-      })
-    );
-
-    // this.app.set('trust proxy', 1);
+    this.app.use(cors({}));
     this.app.use(express.json());
+    // this.app.set('trust proxy', 1);
+  }
+
+  private useServiceRoutes() {
+    rootServiceRoutes(this.app);
   }
 }
