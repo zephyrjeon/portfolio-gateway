@@ -1,11 +1,9 @@
 import 'reflect-metadata';
+import { appConfigs } from './configs/getAppConfigs';
 import { AppServer } from './server';
-import { getAppConfigs } from './configs/getAppConfigs';
 
 const startServer = async () => {
-  const configs = getAppConfigs();
-  console.log('Configs: ', configs);
-  const server = new AppServer(configs);
+  const server = new AppServer(appConfigs);
 
   server.startServer().catch((err) => {
     console.log(err);

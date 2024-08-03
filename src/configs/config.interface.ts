@@ -1,6 +1,6 @@
-export interface IServerConfigs extends IServerBaseConfigs, IJWTConfigs {}
+export interface IAppConfigs extends IBaseConfigs, IJWTConfigs {}
 
-export interface IServerBaseConfigs {
+export interface IBaseConfigs {
   PORT: number;
   COOKIE_SECRET: string;
 }

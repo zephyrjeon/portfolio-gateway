@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
 import path from 'path';
 import { COMMON_SERVER_CONFIGS } from './config.common';
-import { PROD_SERVER_CONFIGS } from './config.prod';
+import { PROD_SERVER_CONFIGS } from './config.production';
 
-export function getAppConfigs() {
+function getAppConfigs() {
   if (!process.env.NODE_ENV) {
     throw new Error('NODE_ENV is undefined');
   }
@@ -22,3 +22,7 @@ export function getAppConfigs() {
     return Object.assign(COMMON_SERVER_CONFIGS, parsed);
   }
 }
+
+export const appConfigs = getAppConfigs();
+
+console.log('App Configs: ', appConfigs);

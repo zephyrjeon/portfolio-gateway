@@ -1,15 +1,14 @@
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
-import { rootServiceRoutes } from './routes/routes';
-
-const SERVER_PORT = 3000;
+import { IAppConfigs } from './configs/config.interface';
+import { AppRoutes } from './routes/AppRoutes';
 
 export class AppServer {
   private httpServer: http.Server | null = null;
   private app = express();
 
-  constructor(private configs: {} = {}) {
+  constructor(private configs: IAppConfigs) {
     // TODO
   }
 
@@ -17,10 +16,10 @@ export class AppServer {
     console.log('Starting up.....');
 
     this.useMiddlewares();
-    this.useServiceRoutes();
+    this.useAppRoutes();
 
-    this.httpServer = this.app.listen({ port: SERVER_PORT }, () => {
-      console.log(`🚀 Server ready at ${SERVER_PORT}`);
+    this.httpServer = this.app.listen({ port: this.configs.PORT }, () => {
+      console.log(`🚀 Server ready at ${this.configs.PORT}`);
     });
   }
 
@@ -41,7 +40,7 @@ export class AppServer {
     // this.app.set('trust proxy', 1);
   }
 
-  private useServiceRoutes() {
-    rootServiceRoutes(this.app);
+  private useAppRoutes() {
+    new AppRoutes(this.app).routes();
   }
 }
