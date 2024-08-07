@@ -49,36 +49,36 @@ export class Fetch {
   }
 
   private static async responseHandler(request: () => Promise<Response>) {
-    const response = await request();
+    try {
+      let body: any;
+      const response = await request();
 
-    if (response.ok) {
-      return await response.json();
-    } else {
-      let errorMessage: string | undefined;
-
-      try {
-        const errorBody = await response.json();
-        errorMessage = errorBody.error;
-      } catch {
-        console.log('Fetch error did not contain json body');
+      if (response.headers.get('Content-Type')?.includes?.('json')) {
+        body = await response.json();
+      } else {
+        body = await response.text();
       }
 
-      switch (response.status) {
-        // TODO
-        case StatusCodes.BAD_REQUEST:
-        case StatusCodes.UNAUTHORIZED:
-        case StatusCodes.NOT_FOUND:
-        case StatusCodes.CONFLICT:
-        case StatusCodes.TOO_MANY_REQUESTS:
-        case StatusCodes.INTERNAL_SERVER_ERROR:
-        case StatusCodes.BAD_GATEWAY:
-        case StatusCodes.GATEWAY_TIMEOUT:
-
-        default:
-          throw Error(
-            'Status code: ' + response.status + ' Error: ' + errorMessage
-          );
+      if (response.ok) {
+        return body;
+      } else {
+        // TODO: error handling
+        switch (response.status) {
+          case StatusCodes.BAD_REQUEST:
+          case StatusCodes.UNAUTHORIZED:
+          case StatusCodes.NOT_FOUND:
+          case StatusCodes.CONFLICT:
+          case StatusCodes.TOO_MANY_REQUESTS:
+          case StatusCodes.INTERNAL_SERVER_ERROR:
+          case StatusCodes.BAD_GATEWAY:
+          case StatusCodes.GATEWAY_TIMEOUT:
+          default:
+            console.log('Fetch Error', response, body);
+            return { response, body };
+        }
       }
+    } catch {
+      console.log('Unknown Fetch Error');
     }
   }
 }
