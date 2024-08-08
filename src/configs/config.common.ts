@@ -1,4 +1,9 @@
-import { IJWTConfigs, IBaseConfigs, IAppConfigs } from './config.interface';
+import {
+  IJWTConfigs,
+  IBaseConfigs,
+  IAppConfigs,
+  IURLConfigs,
+} from './config.interface';
 
 const BASE_CONFIGS: IBaseConfigs = {
   PORT: parseInt(process.env.PORT!),
@@ -10,8 +15,13 @@ const JWT_CONFIGS: IJWTConfigs = {
   JWT_EXPERATION_TIME: 24 * 60 * 60,
 };
 
+const URL_CONFIGS: IURLConfigs = {
+  PORTFOLIO_AUTH_URL: process.env.PORTFOLIO_AUTH_URL!,
+};
+
 export const COMMON_SERVER_CONFIGS: IAppConfigs = Object.assign(
   {},
   BASE_CONFIGS,
-  JWT_CONFIGS
+  JWT_CONFIGS,
+  URL_CONFIGS
 );
