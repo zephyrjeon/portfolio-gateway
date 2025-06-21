@@ -3,6 +3,8 @@ import express from 'express';
 import http from 'http';
 import { IAppConfigs } from './configs/config.interface';
 import { AppRoutes } from './routes/AppRoutes';
+import cookieParser from 'cookie-parser';
+import { setSession } from './middlewares/setSession';
 
 export class AppServer {
   private httpServer: http.Server | null = null;
@@ -37,6 +39,8 @@ export class AppServer {
     // }
     this.app.use(cors({}));
     this.app.use(express.json());
+    this.app.use(cookieParser(this.configs.COOKIE_SECRET));
+    this.app.use(setSession);
     // this.app.set('trust proxy', 1);
   }
 
